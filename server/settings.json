@@ -1,0 +1,6 @@
+{
+    "framePerSecond": 30,
+    "maxPlayerPerRoom": 8,
+    "maxUsernameLength": 19,
+    "startCountdown": 5
+}

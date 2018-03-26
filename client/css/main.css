@@ -1,0 +1,92 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    background-color: #eee
+}
+
+#view-login,
+#view-room {
+    height: 100vh
+}
+
+#login-form>div {
+    margin-bottom: 0
+}
+
+
+/* room-left */
+
+#room-users>li>* {
+    line-height: 1.5em;
+    word-break: break-all;
+    word-wrap: break-word
+}
+
+#room-users>li:first-child {
+    color: red;
+    font-weight: bold
+}
+
+#room-you {
+    margin-right: 1em
+}
+
+
+/* room-right */
+
+#room-right {
+    margin-left: 0.5em
+}
+
+#room-msgdiv {
+    height: 75vh;
+    overflow-y: auto
+}
+
+#room-msgul {
+    padding: 0px;
+    list-style-type: none
+}
+
+#room-msgul>li {
+    margin: 0.5em 0 0 0;
+    line-height: 2em;
+    word-break: break-all;
+    word-wrap: break-word
+}
+
+#room-msgul>li>* {
+    display: inline
+}
+
+#room-form>div {
+    width: 75%
+}
+
+#room-input {
+    width: 100%
+}
+
+#room-form>button {
+    width: 15%
+}
+
+
+/* common */
+
+.ver-center {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%)
+}
+
+.ver-center-btm {
+    position: relative;
+    top: 50%;
+    transform: translateY(-100%)
+}
+
+.bd-rad1 {
+    border-radius: 1em
+}

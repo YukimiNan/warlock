@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="screen-orientation" content="portrait">
+
+  <title>Warlock</title>
+
+  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+  <!-- <link rel="stylesheet" href="./css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="./css/main.css">
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="row" id="view-login">
+      <div class="col-md-offset-4 col-md-4 col-xs-12 ver-center-btm">
+
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <form class="text-center" id="login-form">
+              <div class="form-group form-group-lg">
+                <input type="text" class="form-control text-center" id="nickname" placeholder="昵称" pattern=".*\S.*" required>
+              </div>
+              <h4>
+                <span class="label label-danger" id="login-failed"></span>
+              </h4>
+              <button type="submit" class="btn btn-lg btn-primary btn-block" id="login-submit">登入</button>
+            </form>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row" id="view-room" hidden>
+      <div class="row ver-center">
+
+        <div class="col-md-offset-2 col-md-3 panel panel-default bd-rad1">
+
+          <ul class="list-group" id="room-users">
+          </ul>
+
+          <div class="row" style="padding: 1em">
+            <button type="button" class="btn btn-lg btn-danger btn-block" id="room-start">开始</button>
+          </div>
+
+        </div>
+
+        <div class="col-md-5 panel panel-default bd-rad1" id="room-right">
+          <div class="panel-body">
+            <div class="row">
+
+              <div class="col-md-12" id="room-msgdiv">
+                <ul id="room-msgul">
+                </ul>
+              </div>
+
+              <form class="form-inline text-center" id="room-form">
+                <div class="form-group form-group-lg">
+                  <input type="text" class="form-control" id="room-input" placeholder="我是聊天框~" pattern=".*\S.*" autocomplete="off" required>
+                </div>
+                <button type="submit" class="btn btn-lg btn-primary">发送</button>
+              </form>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <!-- <script src="./js/jquery.min.js"></script> -->
+  <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+  <!-- <script src="./js/bootstrap.min.js"></script> -->
+  <script src="./socket.io/socket.io.js"></script>
+  <script src="./js/require.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+
+</html>
