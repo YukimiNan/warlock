@@ -2,5 +2,10 @@
     "framePerSecond": 30,
     "maxPlayerPerRoom": 8,
     "maxUsernameLength": 19,
-    "startCountdown": 5
+    "startCountdown": 5,
+    "gameWidth": 5000,
+    "gameHeight": 5000,
+    "startSpeed": 4,
+    "colors": ["red", "green", "cyan", "yellow"],
+    "radius": 40
 }

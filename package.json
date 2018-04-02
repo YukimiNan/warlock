@@ -1,28 +1,28 @@
 {
-    "name": "warlock",
-    "version": "1.0.0",
-    "description": "A clone of Warcraft3 map \"Warlock\" with HTML5 canvas &amp; Socket.IO",
-    "main": "src/server/server.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node src/server/server.js"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/YukimiNan/warlock.git"
-    },
-    "author": "",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/YukimiNan/warlock/issues"
-    },
-    "homepage": "https://github.com/YukimiNan/warlock#readme",
-    "devDependencies": {
-        "eslint": "^4.19.0"
-    },
-    "dependencies": {
-        "express": "^4.16.3",
-        "socket.io": "^2.0.4",
-        "tracer": "^0.8.12"
-    }
+  "name": "warlock",
+  "version": "1.0.0",
+  "description": "A clone of Warcraft3 map \"Warlock\" with HTML5 canvas &amp; Socket.IO",
+  "main": "server/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YukimiNan/warlock.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/YukimiNan/warlock/issues"
+  },
+  "homepage": "https://github.com/YukimiNan/warlock#readme",
+  "devDependencies": {
+    "eslint": "^4.19.0"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "socket.io": "^2.0.4",
+    "tracer": "^0.8.12"
+  }
 }

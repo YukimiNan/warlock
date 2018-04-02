@@ -9,7 +9,7 @@ require('./lib/yukimilib');
 
 const s = require('./settings.json');
 
-const sockets = {}, // 归User类管理
+const sockets = {}, // 归User类管理归User类管理
     users = {}, // User类外只读不写
     rooms = {}; // Room类外只读不写
 
@@ -25,6 +25,17 @@ class User {
         this.roomId = null;
         this.warlock = null;
         users[this.id] = this;
+
+        this.radius = s.radius;        
+        this.x = Math.random() * (s.gameWidth - this.radius * 2) + this.radius;
+        this.y = Math.random() * (s.gameHeight - this.radius * 2) + this.radius;
+
+        this.target = { x: this.x, y: this.y };
+        this.speed = s.startSpeed;
+
+        this.screenX = null;
+        this.screenY = null;
+        this.color = null;
     }
 
     emitFatal(reason) {
@@ -110,6 +121,34 @@ class User {
         this.roomId = null;
         return 'succeed';
     }
+
+    // 可能的返回值：succeed
+    moveToTarget() {
+        let dis = Math.sqrt((this.target.x - this.x) * (this.target.x - this.x) +
+            (this.target.y - this.y) * (this.target.y - this.y));
+        if (dis <= this.speed) {
+            this.x = this.target.x;
+            this.y = this.target.y;
+        }
+        else {
+            let dir = { x: (this.target.x - this.x) / dis, y: (this.target.y - this.y) / dis };
+            this.x += dir.x * this.speed;
+            this.y += dir.y * this.speed;
+        }
+        if (this.x < 0 + this.radius) {
+            this.x = 0 + this.radius;
+        }
+        else if (this.x >= s.gameWidth - this.radius) {
+            this.x = s.gameWidth - this.radius;
+        }
+        if (this.y < 0 + this.radius) {
+            this.y = 0 + this.radius;
+        }
+        else if (this.y >= s.gameHeight - this.radius) {
+            this.y = s.gameHeight - this.radius;
+        }
+        return 'succeed';
+    }
 }
 
 class Room {
@@ -141,10 +180,19 @@ class Room {
         }
         return 'succeed';
     }
-
+    // 可能的返回值: succeed, unscceed
+    Updates() {
+        this.users.forEach(user => {
+            // user.target = { x: user.x + 1000, y: user.y + 1000 }; //for test
+            if (user.moveToTarget() !== 'succeed') {
+                return 'unsucceed';
+            }
+        });
+        return 'succeed';
+    }
     // 可能的返回值: succeed, insufficient
     start() {
-        if (this.users.length <= 1)
+        if (this.users.length < 1)
             return 'insufficient';
 
         this.status = 'running';
@@ -218,30 +266,45 @@ io.on('connection', (socket) => {
 
     socket.on('c_start', (args) => {
         const status = rooms[me.roomId].start();
-
         if (status === 'succeed') {
             systemChat(me.roomId, `${me.nickname} 开始了游戏，游戏将在 ${s.startCountdown} 秒后开始...`);
 
+            let colors = [...s.colors];
+            rooms[me.roomId].users.forEach(user => {
+                let randomIndex = Math.floor(Math.random() * colors.length);
+                user.color = colors[randomIndex];
+                colors.splice(randomIndex);
+            })
             for (let i = 1; i < s.startCountdown; ++i) {
                 setTimeout(() => {
                     systemChat(me.roomId, `游戏将在 ${s.startCountdown - i} 秒后开始...`);
-                }, i * 1000);
+                }, i * 10);
             }
 
             setTimeout(() => {
                 systemChat(me.roomId, '游戏开始');
-                io.in(me.roomId).emit('s_start', {});
-            }, s.startCountdown * 1000);
+                io.in(me.roomId).emit('s_start', s);
+            }, s.startCountdown * 10);
         } else if (status === 'insufficient') {
             systemChat(me.id, '人数不足，不能开始游戏');
         }
 
         logger.info('%s start %s %s', me.id, me.roomId, status);
     });
+    socket.on('c_moveClick', (args) => {
+        users[me.id].target.x = args.target.x;
+        users[me.id].target.y = args.target.y;
+        logger.info('%s wants to move to {%d %d}', me.id, users[me.id].target.x, users[me.id].target.y);
+    });
+
 });
 
 setInterval(() => {
     Object.values(rooms).forEach((room) => {
+        if (room.status === 'running') {
+            // 每间room进行状态更新
+            room.Updates();
+        }
         io.in(room.id).emit('frame', {
             users: room.users
         });
