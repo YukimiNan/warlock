@@ -26,12 +26,14 @@ class User {
         this.warlock = null;
         users[this.id] = this;
 
-        this.radius = s.radius;        
+        this.radius = s.radius;
         this.x = Math.random() * (s.gameWidth - this.radius * 2) + this.radius;
         this.y = Math.random() * (s.gameHeight - this.radius * 2) + this.radius;
 
         this.target = { x: this.x, y: this.y };
         this.speed = s.startSpeed;
+        this.HP = s.startHP;
+        this.burning = false;
 
         this.screenX = null;
         this.screenY = null;
@@ -151,11 +153,55 @@ class User {
     }
 }
 
+class DefenceArea {
+    constructor() {
+        this.x = 0;
+        this.y = 0;
+        this.height = s.gameHeight;
+        this.width = s.gameWidth;
+        this.speedReduce = 500;
+        this.startSpeed = 1;
+    }
+
+    // Event of onetime reduce of the safe area
+    AreaReduce() {
+        // 使用反比函数控制缩圈速度，延长小场景时间，改善游戏节奏
+        if (this.height >= 10 || this.width >= 10) {
+            let speedTmp = this.speedReduce / (this.x + this.speedReduce) * this.startSpeed;
+            this.x += speedTmp;
+            this.y += speedTmp;
+            this.height -= speedTmp * 2;
+            this.width -= speedTmp * 2;
+        }
+        return 'succeed';
+    }
+
+    // if the user in this DefenceArea.
+    // if not, let him/her burned and HP down!
+    BloodReduce(user) {
+        if (user.x <= this.x + this.width &&
+            user.y <= this.y + this.height &&
+            user.x >= this.x &&
+            user.y >= this.y) {
+            this.burning = false;
+        }
+        else {
+            if (user.HP >= 0.05)
+                user.HP -= 0.05;
+            else
+                user.HP = 0;
+            this.burning = true;
+        }
+        return 'succeed';
+    }
+}
+
 class Room {
     constructor() {
         this.id = String(new Date().getTime());
         this.status = 'waiting'; // 可能的值: waiting, running
         this.users = [];
+        this.defenceArea = new DefenceArea();
         rooms[this.id] = this;
     }
 
@@ -187,7 +233,11 @@ class Room {
             if (user.moveToTarget() !== 'succeed') {
                 return 'unsucceed';
             }
+            if (this.defenceArea.BloodReduce(user) !== 'succeed')
+                return 'unsucceed1';
         });
+        if (this.defenceArea.AreaReduce() !== 'succeed')
+            return 'unsucceed1';
         return 'succeed';
     }
     // 可能的返回值: succeed, insufficient
@@ -274,7 +324,7 @@ io.on('connection', (socket) => {
                 let randomIndex = Math.floor(Math.random() * colors.length);
                 user.color = colors[randomIndex];
                 colors.splice(randomIndex);
-            })
+            });
             for (let i = 1; i < s.startCountdown; ++i) {
                 setTimeout(() => {
                     systemChat(me.roomId, `游戏将在 ${s.startCountdown - i} 秒后开始...`);
@@ -306,7 +356,8 @@ setInterval(() => {
             room.Updates();
         }
         io.in(room.id).emit('frame', {
-            users: room.users
+            users: room.users,
+            defenceArea: room.defenceArea
         });
     });
 }, 1000 / s.framePerSecond);

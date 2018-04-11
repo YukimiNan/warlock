@@ -7,5 +7,6 @@
     "gameHeight": 5000,
     "startSpeed": 4,
     "colors": ["red", "green", "cyan", "yellow"],
-    "radius": 40
+    "radius": 40,
+    "startHP": 100
 }
