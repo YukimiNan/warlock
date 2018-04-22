@@ -5,8 +5,12 @@
     "startCountdown": 5,
     "gameWidth": 5000,
     "gameHeight": 5000,
-    "startSpeed": 4,
+    "startSpeed": 12,
     "colors": ["red", "green", "cyan", "yellow"],
     "radius": 40,
-    "startHP": 100
+    "startHP": 100,
+    "minheight": 10,
+    "minwidth": 10,
+    "maxheight": 60,
+    "maxwidth": 60
 }
