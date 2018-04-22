@@ -49,8 +49,8 @@ let cameraMain = {
     screenY: global.screenHeight / 2,
 };
 
-let totalusernum = null
-let aliveusernum = null
+let totalusernum = null;
+let aliveusernum = null;
 let me = null;
 let users = [];
 let target = null;
@@ -81,20 +81,20 @@ let defenceAreaShape = null;
 
 let Boards = null;
 let userBoard = null;
-let userHPs = []
-let usernames_hp = []
-let zi_wanjiabang = null
-let zi_wanjiaming_hp = null
-let zi_shengming =null
+let userHPs = [];
+let usernames_hp = [];
+let zi_wanjiabang = null;
+let zi_wanjiaming_hp = null;
+let zi_shengming = null;
 
 let scoreBoard = null;
 let usernames_score = [];
 let userscores = [];
-let zi_jifenbang = null
-let zi_wanjiaming_score = null
-let zi_jifeng = null
+let zi_jifenbang = null;
+let zi_wanjiaming_score = null;
+let zi_jifeng = null;
 
-let zi_shengyuwanjiashu = null
+let zi_shengyuwanjiashu = null;
 
 
 
@@ -155,15 +155,15 @@ const main = (room) => {
         lines[1].graphics.c();
         for (; x < global.screenWidth; x += global.screenWidth / 10) {
             lines[0].graphics.setStrokeStyle(3)
-            .beginStroke('#33333333')
-            .moveTo(x, 0)
-            .lineTo(x, global.gameHeight);
+                .beginStroke('#33333333')
+                .moveTo(x, 0)
+                .lineTo(x, global.gameHeight);
         }
         for (; y < global.screenWidth; y += global.screenWidth / 10) {
             lines[1].graphics.setStrokeStyle(3)
-            .beginStroke('#33333333')
-            .moveTo(0, y)
-            .lineTo(global.screenWidth, y);
+                .beginStroke('#33333333')
+                .moveTo(0, y)
+                .lineTo(global.screenWidth, y);
         }
     };
     //stage的自动刷新
@@ -171,11 +171,11 @@ const main = (room) => {
         if (global.gameStart) {
             // stage.removeAllChildren();
             if (me.isdeath) {
-                cameraMain.x = 2500
-                cameraMain.y = 2500
+                cameraMain.x = 2500;
+                cameraMain.y = 2500;
                 // console.log(me.showdeath)
                 if (!me.showdeath) {
-                    alert("你死了")
+                    alert('你死了');
                 }
             }
             else {
@@ -202,14 +202,14 @@ const main = (room) => {
                 .beginStroke('22AA22')
                 .beginFill('#00EE22')
                 .drawPolyStar(toScreenPos(target).x, toScreenPos(target).y, 20, 3, 0.7, 90);
-            
+
             userBoard.graphics.c();
             //??????????????????????????????
             targetStar.graphics.setStrokeStyle(3, 1)
                 .beginStroke('22AA22')
                 .beginFill('#BBFFFF33')
                 .drawRect(0, 0, 230, 300);
-            
+
             scoreBoard.graphics.c();
             //??????????????????????????????
             targetStar.graphics.setStrokeStyle(3, 1)
@@ -217,51 +217,51 @@ const main = (room) => {
                 .beginFill('#BBFFFF33')
                 .drawRect(230, 0, 230, 300);
 
-            zi_shengyuwanjiashu.text = "剩余玩家数 : " + aliveusernum;
+            zi_shengyuwanjiashu.text = '剩余玩家数 : ' + aliveusernum;
             zi_shengyuwanjiashu.font = 'bold 50px Arial';
             zi_shengyuwanjiashu.textAlign = 'centor';
-            zi_shengyuwanjiashu.x = innerWidth*(5/11);
+            zi_shengyuwanjiashu.x = innerWidth * (5 / 11);
             zi_shengyuwanjiashu.y = 50;
             zi_shengyuwanjiashu.textBaseline = 'middle';
 
-            
-            zi_wanjiabang.text = "玩家榜"
+
+            zi_wanjiabang.text = '玩家榜';
             zi_wanjiabang.font = 'bold 25px Arial';
             zi_wanjiabang.textAlign = 'centor';
             zi_wanjiabang.x = 80;
             zi_wanjiabang.y = 20;
             zi_wanjiabang.textBaseline = 'middle';
 
-            zi_wanjiaming_hp.text = "用户名"
+            zi_wanjiaming_hp.text = '用户名';
             zi_wanjiaming_hp.font = 'bold 25px Arial';
             zi_wanjiaming_hp.textAlign = 'centor';
             zi_wanjiaming_hp.x = 20;
             zi_wanjiaming_hp.y = 50;
             zi_wanjiaming_hp.textBaseline = 'middle';
-            
-            zi_shengming.text = "生命"
+
+            zi_shengming.text = '生命';
             zi_shengming.font = 'bold 25px Arial';
             zi_shengming.textAlign = 'centor';
             zi_shengming.x = 150;
             zi_shengming.y = 50;
             zi_shengming.textBaseline = 'middle';
-            
-                
-            zi_jifenbang.text = "积分榜"
+
+
+            zi_jifenbang.text = '积分榜';
             zi_jifenbang.font = 'bold 25px Arial';
             zi_jifenbang.textAlign = 'centor';
             zi_jifenbang.x = 310;
             zi_jifenbang.y = 20;
             zi_jifenbang.textBaseline = 'middle';
 
-            zi_wanjiaming_score.text = "用户名"
+            zi_wanjiaming_score.text = '用户名';
             zi_wanjiaming_score.font = 'bold 25px Arial';
             zi_wanjiaming_score.textAlign = 'centor';
             zi_wanjiaming_score.x = 250;
             zi_wanjiaming_score.y = 50;
             zi_wanjiaming_score.textBaseline = 'middle';
 
-            zi_jifeng.text = "积分"
+            zi_jifeng.text = '积分';
             zi_jifeng.font = 'bold 25px Arial';
             zi_jifeng.textAlign = 'centor';
             zi_jifeng.x = 400;
@@ -269,20 +269,20 @@ const main = (room) => {
             zi_jifeng.textBaseline = 'middle';
 
             users.forEach((user, index) => {
-                usernames_hp[index].text = user.nickname
+                usernames_hp[index].text = user.nickname;
                 usernames_hp[index].font = 'bold 25px Arial';
                 usernames_hp[index].textAlign = 'centor';
                 usernames_hp[index].x = 20;
                 usernames_hp[index].y = 80 + index * 30;
                 usernames_hp[index].textBaseline = 'middle';
-                
-                usernames_score[index].text = user.nickname
+
+                usernames_score[index].text = user.nickname;
                 usernames_score[index].font = 'bold 25px Arial';
                 usernames_score[index].textAlign = 'centor';
                 usernames_score[index].x = 250;
                 usernames_score[index].y = 80 + index * 30;
                 usernames_score[index].textBaseline = 'middle';
-                
+
 
                 userHPs[index].text = Math.ceil(user.HP);
                 userHPs[index].font = 'bold 25px Arial';
@@ -298,13 +298,13 @@ const main = (room) => {
                 userscores[index].y = 80 + index * 30;
                 userscores[index].textBaseline = 'middle';
 
-                if(user.isdeath) {
+                if (user.isdeath) {
                     circle[index].graphics.c();
-                    circle[index].graphics.setStrokeStyle(4, 1)
-                    nicknameText[index].text = ''
-                    HPs[index].text = ''
+                    circle[index].graphics.setStrokeStyle(4, 1);
+                    nicknameText[index].text = '';
+                    HPs[index].text = '';
                 }
-                else{
+                else {
                     user.screenX = toScreenPos(user).x;
                     user.screenY = toScreenPos(user).y;
                     // console.log("user"+user.screenX,user.screenY);
@@ -313,14 +313,14 @@ const main = (room) => {
                         .beginStroke('black').
                         beginFill(user.color).
                         drawCircle(user.screenX, user.screenY, user.radius);
-    
+
                     nicknameText[index].text = user.nickname;
                     nicknameText[index].font = 'bold 25px Arial';
                     nicknameText[index].textAlign = 'centor';
                     nicknameText[index].x = user.screenX - 20;
                     nicknameText[index].y = user.screenY - 10;
                     nicknameText[index].textBaseline = 'middle';
-    
+
                     HPs[index].text = 'HP: ' + Math.ceil(user.HP);
                     HPs[index].font = '15px Arial';
                     HPs[index].textAlign = 'centor';
@@ -330,34 +330,34 @@ const main = (room) => {
                 }
             });
             // console.log(skills)
-            skills.forEach((skill,index) => {
+            skills.forEach((skill, index) => {
                 if (skill.isdisapear) {
                     skillCircle[index].graphics.c();
-                    skillCircle[index].graphics.setStrokeStyle(4, 1)
+                    skillCircle[index].graphics.setStrokeStyle(4, 1);
                 }
                 else {
-                    skill.screenX = toScreenPos(skill).x
-                    skill.screenY = toScreenPos(skill).y
-                    let temp = {x: skill.startx, y: skill.starty}
-                    skill.screenstartX = toScreenPos(temp).x
-                    skill.screenstartY = toScreenPos(temp).y
+                    skill.screenX = toScreenPos(skill).x;
+                    skill.screenY = toScreenPos(skill).y;
+                    let temp = { x: skill.startx, y: skill.starty };
+                    skill.screenstartX = toScreenPos(temp).x;
+                    skill.screenstartY = toScreenPos(temp).y;
                     // console.log("skill"+skill.screenX,skill.screenY);
-                    if(skill.name == "thunder") {
+                    if (skill.name == 'thunder') {
                         skillCircle[index].graphics.c();
                         skillCircle[index].graphics.setStrokeStyle(20, 1)
-                        .beginStroke('blue')
-                        .moveTo(skill.screenstartX, skill.screenstartY)
-                        .lineTo(skill.screenX, skill.screenY);
+                            .beginStroke('blue')
+                            .moveTo(skill.screenstartX, skill.screenstartY)
+                            .lineTo(skill.screenX, skill.screenY);
                     }
                     else {
                         skillCircle[index].graphics.c();
                         skillCircle[index].graphics.setStrokeStyle(4, 1)
                             .beginStroke('black')
                             .beginFill(skill.color)
-                            .drawCircle(skill.screenX, skill.screenY, skill.radius)
+                            .drawCircle(skill.screenX, skill.screenY, skill.radius);
                     }
                 }
-            })
+            });
             // stage.addChild(...skills)
 
             defenceAreaShape.graphics.c();
@@ -376,16 +376,16 @@ const main = (room) => {
         }
     };
     // createjs.Ticker.addEventListener('tick', handleTicker);
-    setInterval(handleTicker)
+    setInterval(handleTicker);
     // events
     const mouseDownEvent = event => {
         // console.log(event)
         // console.log(event.nativeEvent.button)
-        if(me.isdeath)
-            return "death"
+        if (me.isdeath)
+            return 'death';
         // cancle skill
-        if(event.nativeEvent.button == 2){
-            mouseMode = -1
+        if (event.nativeEvent.button == 2) {
+            mouseMode = -1;
             // console.log(event.pointerID)
             // console.log(event)
             // event.cancelBubble = true
@@ -395,11 +395,11 @@ const main = (room) => {
         if (mouseMode === -1) // mouseMode === 'moveing'
             socket.emit('c_moveClick', { target: target });
         else // mouseMode === 'fireball'
-            socket.emit('c_skill', { target: target ,skillindex: mouseMode});
-        
+            socket.emit('c_skill', { target: target, skillindex: mouseMode });
+
         beforeskill.graphics.c();
         beforeskill.graphics.setStrokeStyle(3, 1);
-        mouseMode = -1
+        mouseMode = -1;
     };
 
     socket.on('res_login', (args) => {
@@ -473,31 +473,31 @@ const main = (room) => {
 
         // stage.addEventListener('mousedown', mouseDownEvent);
         window.addEventListener('keydown', event => {
-            if(me.isdeath)
-                return "death"
-            if(event.key == "q") {
-                mouseMode = 0
-                console.log("q")
+            if (me.isdeath)
+                return 'death';
+            if (event.key == 'q') {
+                mouseMode = 0;
+                console.log('q');
             }
-            else if(event.key == "w") {
-                mouseMode = 1
-                console.log("w")
+            else if (event.key == 'w') {
+                mouseMode = 1;
+                console.log('w');
             }
-            else if(event.key == "e") {
-                mouseMode = 2
-                console.log("e")
+            else if (event.key == 'e') {
+                mouseMode = 2;
+                console.log('e');
             }
-        })
+        });
         stage.addEventListener('stagemousemove', event => {
-            if(!me.isdeath && mouseMode != -1) {
+            if (!me.isdeath && mouseMode != -1) {
                 beforeskill.graphics.c();
                 beforeskill.graphics.setStrokeStyle(3, 1)
-                // .beginStroke('#00C5CDAA')
-                .beginFill('blue')
-                .drawCircle(event.stageX, event.stageY, 10);
+                    // .beginStroke('#00C5CDAA')
+                    .beginFill('blue')
+                    .drawCircle(event.stageX, event.stageY, 10);
             }
-            stage.addEventListener('mousedown',mouseDownEvent);
-        })
+            stage.addEventListener('mousedown', mouseDownEvent);
+        });
 
         lines.push(new createjs.Shape());
         lines.push(new createjs.Shape());
@@ -528,7 +528,7 @@ const main = (room) => {
             usernames_score[i] = new createjs.Text();
         }
         for (let i = 0; i < totalusernum * 3; ++i) {
-            skillCircle[i] = new createjs.Shape()
+            skillCircle[i] = new createjs.Shape();
         }
         defenceAreaShape = new createjs.Shape();
         touchBoard = new createjs.Shape();
@@ -540,13 +540,13 @@ const main = (room) => {
             .drawCircle(innerWidth / 10,
                 innerHeight * (8 / 9),
                 Math.min(global.screenWidth / 4, global.screenHeight / 4 - 10));
-        
-        Board.addChild(userBoard, ...userHPs, ...usernames_hp, 
+
+        Board.addChild(userBoard, ...userHPs, ...usernames_hp,
             scoreBoard, ...usernames_score, ...userscores, zi_wanjiabang,
-            zi_wanjiaming_hp, zi_shengming, zi_jifenbang, zi_wanjiaming_score, 
-            zi_jifeng)
-        
-        stage.addChild(gameAreaShape, defenceAreaShape, ...lines, 
+            zi_wanjiaming_hp, zi_shengming, zi_jifenbang, zi_wanjiaming_score,
+            zi_jifeng);
+
+        stage.addChild(gameAreaShape, defenceAreaShape, ...lines,
             targetLine, targetStar, ...userCircle, touchBoard,
             ...skillCircle, beforeskill, Board, zi_shengyuwanjiashu);
 
@@ -563,9 +563,9 @@ const main = (room) => {
     socket.on('frame', (args) => {
         users = args.users;
         defenceArea = args.defenceArea;
-        skills = args.skills
-        totalusernum = args.totalusernum
-        aliveusernum = args.aliveusernum
+        skills = args.skills;
+        totalusernum = args.totalusernum;
+        aliveusernum = args.aliveusernum;
         users.forEach(user => {
             if (global.gameStart && user.id === me.id) {
                 me = user;

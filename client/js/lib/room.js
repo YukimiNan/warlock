@@ -36,14 +36,14 @@ const update = (users, me) => {
 
 const chat = (user, message) => {
     const labelType = user.id === null ? 'warning' : 'success';
-    $('#room-msgul').append(`
+    const li = $(`
         <li>
             <h4>
                 <span class="label label-${labelType}">${user.nickname}</span>
             </h4>
-            <p>${message}</p>
         </li>`
-    );
+    ).append($('<p></p>').text(message));
+    $('#room-msgul').append(li);
     // 滚动到底
     $('#room-msgdiv').scrollTop($('#room-msgdiv')[0].scrollHeight);
 };

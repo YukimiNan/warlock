@@ -40,41 +40,56 @@
     </div>
     <div class="row" id="view-room" hidden>
       <div class="row ver-center">
-    
+
         <div class="col-md-offset-2 col-md-3 panel panel-default bd-rad1">
-    
+
           <ul class="list-group" id="room-users">
           </ul>
-    
+
           <div class="row" style="padding: 1em">
             <button type="button" class="btn btn-lg btn-danger btn-block" id="room-start">开始</button>
           </div>
-    
+
+          <div class="panel panel-info">
+            <div class="panel-heading" onclick="$('#room-tutorial').slideToggle('normal');">
+              <h3 class="panel-title">快速教程</h3>
+            </div>
+            <div class="panel-body" id="room-tutorial">
+              <p>目标：活到最后</p>
+              <p>移动：左键单击</p>
+              <p>施法：单击快捷键后左键单击</p>
+              <p>攻击：Q, E</p>
+              <p>闪现：W</p>
+              <p>注意：不要离开安全区域</p>
+              <p>注意：攻击具有击退效果</p>
+            </div>
+          </div>
+
         </div>
-    
+
         <div class="col-md-5 panel panel-default bd-rad1" id="room-right">
           <div class="panel-body">
             <div class="row">
-    
+
               <div class="col-md-12" id="room-msgdiv">
                 <ul id="room-msgul">
                 </ul>
               </div>
-    
+
               <form class="form-inline text-center" id="room-form">
                 <div class="form-group form-group-lg">
                   <input type="text" class="form-control" id="room-input" placeholder="我是聊天框~" pattern=".*\S.*" autocomplete="off" required>
                 </div>
                 <button type="submit" class="btn btn-lg btn-primary">发送</button>
               </form>
-    
+
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div class="row" id="view-canvas">
+  <div class="row" id="view-canvas" hidden>
     <canvas tabindex="1" id="cvs"></canvas>
   </div>
 
