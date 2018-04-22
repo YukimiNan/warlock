@@ -465,7 +465,7 @@ const main = (room) => {
         $('#view-room').slideUp('normal');
         global.gameWidth = args.gameWidth;
         global.gameHeight = args.gameHeight;
-        global.scalingratio = args.scalingratio
+        global.scalingratio = args.scalingratio;
 
         $('#view-canvas').slideDown('normal');
         stage = new createjs.Stage('cvs');

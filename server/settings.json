@@ -9,7 +9,12 @@
     "defenceAreaWidth": 2500,
     "defenceAreaHeight": 2500,
     "startSpeed": 6,
-    "colors": ["red", "green", "cyan", "yellow"],
+    "colors": [
+        "red",
+        "green",
+        "cyan",
+        "yellow"
+    ],
     "radius": 40,
     "startHP": 100,
     "minheight": 10,
