@@ -28,6 +28,7 @@ const global = {
     screenHeight: window.innerHeight,
     gameWidth: 0,
     gameHeight: 0,
+    scalingratio: 1,
     gameStart: false,
     disconnected: false,
     died: false,
@@ -57,7 +58,7 @@ let target = null;
 let targetStar = null;
 let targetLine = null;
 let offset = { x: 0, y: 0 };
-// mouseMode:{-1: moving, else:skill(0: fireball, 1: blink)}
+// mouseMode:{-1: moving, else:skill(0: fireball, 1: blink, 2:thunder )}
 let mouseMode = -1;
 
 
@@ -171,8 +172,8 @@ const main = (room) => {
         if (global.gameStart) {
             // stage.removeAllChildren();
             if (me.isdeath) {
-                cameraMain.x = 2500;
-                cameraMain.y = 2500;
+                cameraMain.x = 2500 * global.scalingratio;
+                cameraMain.y = 2500 * global.scalingratio;
                 // console.log(me.showdeath)
                 if (!me.showdeath) {
                     alert('你死了');
@@ -187,7 +188,7 @@ const main = (room) => {
             gameAreaShape.graphics.setStrokeStyle(5, 1)
                 .beginStroke('#8B3A3ADD')
                 .beginFill('#B2222299')
-                .drawRect(toScreenPos({ x: 0, y: 0 }).x, toScreenPos({ x: 0, y: 0 }).y, global.gameWidth, global.gameHeight);
+                .drawRect(toScreenPos({ x: 0, y: 0 }).x, toScreenPos({ x: 0, y: 0 }).y, global.gameWidth * global.scalingratio, global.gameHeight * global.scalingratio);
 
             drawGrid();
 
@@ -208,94 +209,94 @@ const main = (room) => {
             targetStar.graphics.setStrokeStyle(3, 1)
                 .beginStroke('22AA22')
                 .beginFill('#BBFFFF33')
-                .drawRect(0, 0, 230, 300);
+                .drawRect(0, 0, 200, 200);
 
             scoreBoard.graphics.c();
             //??????????????????????????????
             targetStar.graphics.setStrokeStyle(3, 1)
                 .beginStroke('22AA22')
                 .beginFill('#BBFFFF33')
-                .drawRect(230, 0, 230, 300);
+                .drawRect(200, 0, 200, 200);
 
             zi_shengyuwanjiashu.text = '剩余玩家数 : ' + aliveusernum;
-            zi_shengyuwanjiashu.font = 'bold 50px Arial';
+            zi_shengyuwanjiashu.font = 'bold 25px Arial';
             zi_shengyuwanjiashu.textAlign = 'centor';
             zi_shengyuwanjiashu.x = innerWidth * (5 / 11);
-            zi_shengyuwanjiashu.y = 50;
+            zi_shengyuwanjiashu.y = 30;
             zi_shengyuwanjiashu.textBaseline = 'middle';
 
 
             zi_wanjiabang.text = '玩家榜';
-            zi_wanjiabang.font = 'bold 25px Arial';
+            zi_wanjiabang.font = 'bold 15px Arial';
             zi_wanjiabang.textAlign = 'centor';
             zi_wanjiabang.x = 80;
             zi_wanjiabang.y = 20;
             zi_wanjiabang.textBaseline = 'middle';
 
             zi_wanjiaming_hp.text = '用户名';
-            zi_wanjiaming_hp.font = 'bold 25px Arial';
+            zi_wanjiaming_hp.font = 'bold 15px Arial';
             zi_wanjiaming_hp.textAlign = 'centor';
             zi_wanjiaming_hp.x = 20;
-            zi_wanjiaming_hp.y = 50;
+            zi_wanjiaming_hp.y = 40;
             zi_wanjiaming_hp.textBaseline = 'middle';
 
             zi_shengming.text = '生命';
-            zi_shengming.font = 'bold 25px Arial';
+            zi_shengming.font = 'bold 15px Arial';
             zi_shengming.textAlign = 'centor';
             zi_shengming.x = 150;
-            zi_shengming.y = 50;
+            zi_shengming.y = 40;
             zi_shengming.textBaseline = 'middle';
 
 
             zi_jifenbang.text = '积分榜';
-            zi_jifenbang.font = 'bold 25px Arial';
+            zi_jifenbang.font = 'bold 15px Arial';
             zi_jifenbang.textAlign = 'centor';
-            zi_jifenbang.x = 310;
+            zi_jifenbang.x = 280;
             zi_jifenbang.y = 20;
             zi_jifenbang.textBaseline = 'middle';
 
             zi_wanjiaming_score.text = '用户名';
-            zi_wanjiaming_score.font = 'bold 25px Arial';
+            zi_wanjiaming_score.font = 'bold 15px Arial';
             zi_wanjiaming_score.textAlign = 'centor';
-            zi_wanjiaming_score.x = 250;
-            zi_wanjiaming_score.y = 50;
+            zi_wanjiaming_score.x = 220;
+            zi_wanjiaming_score.y = 40;
             zi_wanjiaming_score.textBaseline = 'middle';
 
             zi_jifeng.text = '积分';
-            zi_jifeng.font = 'bold 25px Arial';
+            zi_jifeng.font = 'bold 15px Arial';
             zi_jifeng.textAlign = 'centor';
-            zi_jifeng.x = 400;
-            zi_jifeng.y = 50;
+            zi_jifeng.x = 340;
+            zi_jifeng.y = 40;
             zi_jifeng.textBaseline = 'middle';
 
             users.forEach((user, index) => {
                 usernames_hp[index].text = user.nickname;
-                usernames_hp[index].font = 'bold 25px Arial';
+                usernames_hp[index].font = 'bold 15px Arial';
                 usernames_hp[index].textAlign = 'centor';
                 usernames_hp[index].x = 20;
-                usernames_hp[index].y = 80 + index * 30;
+                usernames_hp[index].y = 60 + index * 20;
                 usernames_hp[index].textBaseline = 'middle';
 
                 usernames_score[index].text = user.nickname;
-                usernames_score[index].font = 'bold 25px Arial';
+                usernames_score[index].font = 'bold 15px Arial';
                 usernames_score[index].textAlign = 'centor';
-                usernames_score[index].x = 250;
-                usernames_score[index].y = 80 + index * 30;
+                usernames_score[index].x = 220;
+                usernames_score[index].y = 60 + index * 20;
                 usernames_score[index].textBaseline = 'middle';
 
 
                 userHPs[index].text = Math.ceil(user.HP);
-                userHPs[index].font = 'bold 25px Arial';
+                userHPs[index].font = 'bold 15px Arial';
                 userHPs[index].textAlign = 'centor';
                 userHPs[index].x = 150;
-                userHPs[index].y = 80 + index * 30;
+                userHPs[index].y = 60 + index * 20;
                 userHPs[index].textBaseline = 'middle';
 
                 userscores[index].text = user.score;
-                userscores[index].font = 'bold 25px Arial';
+                userscores[index].font = 'bold 15px Arial';
                 userscores[index].textAlign = 'centor';
-                userscores[index].x = 400;
-                userscores[index].y = 80 + index * 30;
+                userscores[index].x = 340;
+                userscores[index].y = 60 + index * 20;
                 userscores[index].textBaseline = 'middle';
 
                 if (user.isdeath) {
@@ -315,23 +316,23 @@ const main = (room) => {
                         drawCircle(user.screenX, user.screenY, user.radius);
 
                     nicknameText[index].text = user.nickname;
-                    nicknameText[index].font = 'bold 25px Arial';
+                    nicknameText[index].font = 'bold 15px Arial';
                     nicknameText[index].textAlign = 'centor';
                     nicknameText[index].x = user.screenX - 20;
-                    nicknameText[index].y = user.screenY - 10;
+                    nicknameText[index].y = user.screenY - 30;
                     nicknameText[index].textBaseline = 'middle';
 
                     HPs[index].text = 'HP: ' + Math.ceil(user.HP);
-                    HPs[index].font = '15px Arial';
+                    HPs[index].font = '10px Arial';
                     HPs[index].textAlign = 'centor';
-                    HPs[index].x = user.screenX - 20;
-                    HPs[index].y = user.screenY + 10;
+                    HPs[index].x = user.screenX - 15;
+                    HPs[index].y = user.screenY;
                     HPs[index].textBaseline = 'middle';
                 }
             });
             // console.log(skills)
             skills.forEach((skill, index) => {
-                if (skill.isdisapear) {
+                if (skill.isdisappear) {
                     skillCircle[index].graphics.c();
                     skillCircle[index].graphics.setStrokeStyle(4, 1);
                 }
@@ -344,7 +345,7 @@ const main = (room) => {
                     // console.log("skill"+skill.screenX,skill.screenY);
                     if (skill.name == 'thunder') {
                         skillCircle[index].graphics.c();
-                        skillCircle[index].graphics.setStrokeStyle(20, 1)
+                        skillCircle[index].graphics.setStrokeStyle(10, 1)
                             .beginStroke('blue')
                             .moveTo(skill.screenstartX, skill.screenstartY)
                             .lineTo(skill.screenX, skill.screenY);
@@ -464,6 +465,7 @@ const main = (room) => {
         $('#view-room').slideUp('normal');
         global.gameWidth = args.gameWidth;
         global.gameHeight = args.gameHeight;
+        global.scalingratio = args.scalingratio
 
         $('#view-canvas').slideDown('normal');
         stage = new createjs.Stage('cvs');
