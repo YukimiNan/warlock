@@ -35,6 +35,8 @@ class User {
         this.ismove = false// user move or not
         this.target = { x: this.x, y: this.y };
         this.skilltarget = {x: null, y: null};
+        this.iscasting = false;
+        this.castingtime = 0;
         this.speed = s.startSpeed;
         this.HP = s.startHP;
         this.isdeath = false//user death or not
@@ -61,9 +63,9 @@ class User {
     }
 
     addskill(){
-        this.skills[0] = new Skills({name : "huoqiu", damage : 10, speed : 40 * s.scalingratio, range: 2000*s.scalingratio, colddown: 1000, radius: 20 * s.scalingratio, posinfluence: 300, isblink: false, color: 'red'},this.id)
-        this.skills[1] = new Skills({name : "blink", damage : 0, speed : 0*s.scalingratio, range: 1000*s.scalingratio, colddown: 3000, radius: 0, posinfluence: 0, isblink: true, color: null},this.id)
-        this.skills[2] = new Skills({name : "thunder", damage : 5, speed : 120 * s.scalingratio, range: 1000*s.scalingratio, colddown: 1000, radius: 20 * s.scalingratio, posinfluence: 100, isblink: false, color: 'blue'},this.id)
+        this.skills[0] = new Skills({name : "huoqiu", damage : 10, speed : 20 * s.scalingratio, range: 2000*s.scalingratio, colddown: 1000, radius: 20 * s.scalingratio, posinfluence: 150, ischongzhuang: false, color: 'red'},this.id)
+        this.skills[1] = new Skills({name : "blink", damage : 5, speed : 60*s.scalingratio, range: 1000*s.scalingratio, colddown: 3000, radius: this.radius, posinfluence: 100, ischongzhuang: true, color: null},this.id)
+        this.skills[2] = new Skills({name : "thunder", damage : 5, speed : 60 * s.scalingratio, range: 1000*s.scalingratio, colddown: 1000, radius: 20 * s.scalingratio, posinfluence: 70, ischongzhuang: false, color: 'blue'},this.id)
     }
 
     emitFatal(reason) {
@@ -136,11 +138,15 @@ class User {
     leave() {
         // 先操作room再操作user
         if (this.roomId !== null) {
-            if(rooms[this.roomId].status != 'running')
+            if(rooms[this.roomId].status != 'running'){
                 rooms[this.roomId].remove(this);
-            this.isdeath = true
+                rooms[this.roomId].users.remove(this)
+                this.skills.forEach(skill => {
+                    rooms[this.roomId].skillslist.remove(skill)
+                })
+            }
             this.showdeath = true
-            this.HP = 0
+            this.death()
         }
         if (this.roomId in sockets[this.id].rooms) {
             sockets[this.id].leave(this.roomId, (err) => {
@@ -215,8 +221,9 @@ class DefenceArea {
         this.y = (s.gameHeight * s.scalingratio - this.height)/2
         this.minheight = s.minheight * s.scalingratio;
         this.minwidth = s.minwidth * s.scalingratio;
-        this.speedReduce = 6;
+        this.speedReduce = 10;
         this.startSpeed = 1;
+        this.hurt = 0.050
     }
 
     // Event of onetime reduce of the safe area
@@ -243,8 +250,8 @@ class DefenceArea {
             this.burning = false;
         }
         else {
-            if (user.HP >= 0.05)
-                user.HP -= 0.05;
+            if (user.HP >= this.hurt)
+                user.HP -= this.hurt;
             else{
                 user.HP = 0;
                 if(!user.isdeath)
@@ -377,7 +384,7 @@ class Room {
     start() {
         if (this.users.length < 1)
             return 'insufficient';
-
+        this.deathnum = 0
         this.status = 'running';
         return 'succeed';
     }
@@ -393,7 +400,7 @@ class Skills{
         this.colddown = skill.colddown
         this.radius = skill.radius
         this.posinfluence = skill.posinfluence
-        this.isblink = skill.isblink //
+        this.ischongzhuang = skill.ischongzhuang //
         this.attackerid = userid
         this.x = -10000
         this.y = -10000
@@ -410,6 +417,7 @@ class Skills{
         this.target = {x: -10000, y: -10000}
         this.distance = 0
         this.isdisappear = true
+        this.isblink = false
         rooms[users[userid].roomId].skillslist.push(this)
     }
     Attack(user) {
@@ -419,18 +427,26 @@ class Skills{
             this.startx = user.x
             this.starty = user.y
             let dis = Getdistance(this,{x : user.skilltarget.x, y : user.skilltarget.y})
-            if(this.isblink) {
+            if(this.ischongzhuang) {
                 let realdis = Math.min(dis,this.range)
-                user.x = user.x + (user.skilltarget.x - user.x)/dis*realdis
-                user.y = user.y + (user.skilltarget.y - user.y)/dis*realdis
-                user.target.x = user.x
-                user.target.y = user.y
+                // user.x = user.x + (user.skilltarget.x - user.x)/dis*realdis
+                // user.y = user.y + (user.skilltarget.y - user.y)/dis*realdis
+                this.target.x = user.x + (user.skilltarget.x - user.x)/dis*realdis
+                this.target.y = user.y + (user.skilltarget.y - user.y)/dis*realdis
+                user.target.x = this.target.x
+                user.target.y = this.target.y
+                users[this.attackerid].ismove = true
+                users[this.attackerid].iscasting = true;
+                users[this.attackerid].speed = this.speed
             }
             else {
                 this.target.x = this.x + (user.skilltarget.x - this.x)/dis*this.range
                 this.target.y = this.y + (user.skilltarget.y - this.y)/dis*this.range
-                this.isdisappear = false
+                
+            }
+            if(!this.isblink){
                 rooms[user.roomId].penglist.push(this)
+                this.isdisappear = false
             }
             this.iscoldover = false
             this.curcold = this.colddown
@@ -463,11 +479,16 @@ class Skills{
         else
             user.hitspeedy += Math.sqrt(ydis/dis*this.posinfluence*2)
         // console.log(user.hitspeedx,user.hitspeedy)
+        //chongzhuang until the target
+        // if(!this.ischongzhuang)
         this.Disappear();
-        rooms[users[this.attackerid].roomId].penglist.remove(this)
     }
     Disappear() {
-        // console.log("disapear");
+        console.log("disapear");
+        if(this.ischongzhuang){
+            users[this.attackerid].speed = s.startSpeed
+            users[this.attackerid].iscasting = false;
+        }
         this.x = -10000
         this.y = -10000
         this.target.x = -10000
@@ -486,7 +507,7 @@ class Skills{
         else
             this.curcold -= 1000/s.framePerSecond
         //blink complete at once no need to call moveToTarget()
-        if(this.isblink)
+        if(this.blink)
             return "blink"
         if(this.target.x != this.x && this.target.y != this.y)
             this.moveToTarget()
@@ -606,6 +627,8 @@ io.on('connection', (socket) => {
         logger.info('%s start %s %s', me.id, me.roomId, status);
     });
     socket.on('c_moveClick', (args) => {
+        if(users[me.id].iscasting == true)
+            return "casting"
         users[me.id].target.x = args.target.x;
         users[me.id].target.y = args.target.y;
         users[me.id].ismove = true;
@@ -613,6 +636,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('c_skill', (args) => {
+        if(users[me.id].iscasting == true)
+            return "casting"
         users[me.id].skilltarget.x = args.target.x;
         users[me.id].skilltarget.y = args.target.y;
         users[me.id].skills[args.skillindex].Attack(users[me.id])
@@ -627,6 +652,7 @@ setInterval(() => {
             // 每间room进行状态更新
             room.Updates();
         }
+        // console.log(room.users.length)
         io.in(room.id).emit('frame', {
             users: room.users,
             skills: room.skillslist,
