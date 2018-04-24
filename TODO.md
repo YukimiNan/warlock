@@ -1,7 +1,0 @@
-- ~~尝试将socket集成到user~~
-- 确定下述参数：
-  - pingTimeout
-  - pingInterval
-- 处理各事件时检查程序处于哪个阶段，操作应匹配
-- 心跳
-- view-room适配移动端

@@ -20,7 +20,7 @@ class User {
         this.id = socket.id;
         this.username = null;
         this.nickname = null;
-        this.skills = []
+        this.skills = [];
         //test huoqiu
         // User.roomId不能为引用，否则会和Room.users死循环
         // 操作this.roomId时，应同时操作socket[this.id].join/leave
@@ -29,18 +29,22 @@ class User {
         users[this.id] = this;
 
         this.radius = s.radius * s.scalingratio;
-        this.x = Math.random() * (s.defenceAreaWidth * s.scalingratio - this.radius * 2) + this.radius + (s.gameWidth - s.defenceAreaWidth) * s.scalingratio/2;
-        this.y = Math.random() * (s.defenceAreaHeight * s.scalingratio - this.radius * 2) + this.radius + (s.gameHeight - s.defenceAreaHeight) * s.scalingratio/2;
+        this.x = Math.random() * (s.defenceAreaWidth * s.scalingratio - this.radius * 2) + this.radius + (s.gameWidth - s.defenceAreaWidth) * s.scalingratio / 2;
+        this.y = Math.random() * (s.defenceAreaHeight * s.scalingratio - this.radius * 2) + this.radius + (s.gameHeight - s.defenceAreaHeight) * s.scalingratio / 2;
 
-        this.ismove = false// user move or not
+        this.ismove = false;// user move or not
         this.target = { x: this.x, y: this.y };
+<<<<<<< HEAD
         this.skilltarget = {x: null, y: null};
         this.iscasting = false;
         this.castingtime = 0;
+=======
+        this.skilltarget = { x: null, y: null };
+>>>>>>> c5ccf8f72eaca5ba417e875ac63840d84672e538
         this.speed = s.startSpeed;
         this.HP = s.startHP;
-        this.isdeath = false//user death or not
-        this.showdeath = false
+        this.isdeath = false;//user death or not
+        this.showdeath = false;
         this.burning = false;
         this.hitspeedx = 0;
         this.hitspeedy = 0;
@@ -52,20 +56,27 @@ class User {
         this.color = null;
     }
 
-    death(){
-        this.x = null
-        this.y = null
-        this.isdeath = true
-        rooms[this.roomId].penglist.remove(this)
-        rooms[this.roomId].deathnum += 1
+    death() {
+        this.x = null;
+        this.y = null;
+        this.isdeath = true;
+        rooms[this.roomId].penglist.remove(this);
+        rooms[this.roomId].deathnum += 1;
         // users.this
         // socket.emit("s_death",this)
     }
 
+<<<<<<< HEAD
     addskill(){
         this.skills[0] = new Skills({name : "huoqiu", damage : 10, speed : 20 * s.scalingratio, range: 2000*s.scalingratio, colddown: 1000, radius: 20 * s.scalingratio, posinfluence: 150, ischongzhuang: false, color: 'red'},this.id)
         this.skills[1] = new Skills({name : "blink", damage : 5, speed : 60*s.scalingratio, range: 1000*s.scalingratio, colddown: 3000, radius: this.radius, posinfluence: 100, ischongzhuang: true, color: null},this.id)
         this.skills[2] = new Skills({name : "thunder", damage : 5, speed : 60 * s.scalingratio, range: 1000*s.scalingratio, colddown: 1000, radius: 20 * s.scalingratio, posinfluence: 70, ischongzhuang: false, color: 'blue'},this.id)
+=======
+    addskill() {
+        this.skills[0] = new Skills({ name: 'huoqiu', damage: 10, speed: 40 * s.scalingratio, range: 2000 * s.scalingratio, colddown: 1000, radius: 20 * s.scalingratio, posinfluence: 300, isblink: false, color: 'red' }, this.id);
+        this.skills[1] = new Skills({ name: 'blink', damage: 0, speed: 0 * s.scalingratio, range: 1000 * s.scalingratio, colddown: 3000, radius: 0, posinfluence: 0, isblink: true, color: null }, this.id);
+        this.skills[2] = new Skills({ name: 'thunder', damage: 5, speed: 120 * s.scalingratio, range: 1000 * s.scalingratio, colddown: 1000, radius: 20 * s.scalingratio, posinfluence: 100, isblink: false, color: 'blue' }, this.id);
+>>>>>>> c5ccf8f72eaca5ba417e875ac63840d84672e538
     }
 
     emitFatal(reason) {
@@ -76,7 +87,7 @@ class User {
 
     // 可能的返回值: succeed, duplicate, toolong
     login(username, password) {
-        const isUsernameExist = Object.keys(users).map(e=>users[e]).some((user) => user.username === username);
+        const isUsernameExist = Object.keys(users).map(e => users[e]).some((user) => user.username === username);
         if (isUsernameExist)
             return 'duplicate';
 
@@ -125,7 +136,7 @@ class User {
     }
 
     autoRoomId() {
-        const list = Object.keys(rooms).map(e=>rooms[e]).filter((room) => room.status === 'waiting');
+        const list = Object.keys(rooms).map(e => rooms[e]).filter((room) => room.status === 'waiting');
         list.sort((a, b) => {
             if (a.users.length === b.users.length)
                 return a.id - b.id;
@@ -138,6 +149,7 @@ class User {
     leave() {
         // 先操作room再操作user
         if (this.roomId !== null) {
+<<<<<<< HEAD
             if(rooms[this.roomId].status != 'running'){
                 rooms[this.roomId].remove(this);
                 rooms[this.roomId].users.remove(this)
@@ -147,6 +159,13 @@ class User {
             }
             this.showdeath = true
             this.death()
+=======
+            if (rooms[this.roomId].status != 'running')
+                rooms[this.roomId].remove(this);
+            this.isdeath = true;
+            this.showdeath = true;
+            this.HP = 0;
+>>>>>>> c5ccf8f72eaca5ba417e875ac63840d84672e538
         }
         if (this.roomId in sockets[this.id].rooms) {
             sockets[this.id].leave(this.roomId, (err) => {
@@ -168,7 +187,7 @@ class User {
             if (dis <= this.speed) {
                 this.x = this.target.x;
                 this.y = this.target.y;
-                this.ismove = false
+                this.ismove = false;
             }
             else {
                 let dir = { x: (this.target.x - this.x) / dis, y: (this.target.y - this.y) / dis };
@@ -178,24 +197,24 @@ class User {
         }
         this.x += this.hitspeedx;
         this.y += this.hitspeedy;
-        if(Math.abs(this.hitspeedx) >= this.hitinfluence)
-            if(this.hitspeedx > 0)
+        if (Math.abs(this.hitspeedx) >= this.hitinfluence)
+            if (this.hitspeedx > 0)
                 this.hitspeedx -= this.hitinfluence;
             else
                 this.hitspeedx += this.hitinfluence;
         else
-            this.hitspeedx = 0
-        if(Math.abs(this.hitspeedy) >= this.hitinfluence)
-            if(this.hitspeedy > 0)
+            this.hitspeedx = 0;
+        if (Math.abs(this.hitspeedy) >= this.hitinfluence)
+            if (this.hitspeedy > 0)
                 this.hitspeedy -= this.hitinfluence;
             else
                 this.hitspeedy += this.hitinfluence;
         else
-            this.hitspeedy = 0
-        
+            this.hitspeedy = 0;
+
         if (this.x < 0 + this.radius) {
             this.x = 0 + this.radius;
-        } 
+        }
         else if (this.x >= s.gameWidth - this.radius) {
             this.x = s.gameWidth - this.radius;
         }
@@ -217,8 +236,8 @@ class DefenceArea {
         // this.width = s.gameWidth;
         this.height = s.defenceAreaHeight * s.scalingratio;
         this.width = s.defenceAreaWidth * s.scalingratio;
-        this.x = (s.gameWidth * s.scalingratio - this.width)/2 
-        this.y = (s.gameHeight * s.scalingratio - this.height)/2
+        this.x = (s.gameWidth * s.scalingratio - this.width) / 2;
+        this.y = (s.gameHeight * s.scalingratio - this.height) / 2;
         this.minheight = s.minheight * s.scalingratio;
         this.minwidth = s.minwidth * s.scalingratio;
         this.speedReduce = 10;
@@ -230,7 +249,7 @@ class DefenceArea {
     AreaReduce() {
         // 使用反比函数控制缩圈速度，延长小场景时间，改善游戏节奏
         if (this.height >= s.radius * s.minheight || this.width >= s.radius * s.minwidth) {
-            let speedTmp = this.speedReduce / (this.x - (s.gameWidth - s.defenceAreaWidth) * s.scalingratio /2 + this.speedReduce) * this.startSpeed;
+            let speedTmp = this.speedReduce / (this.x - (s.gameWidth - s.defenceAreaWidth) * s.scalingratio / 2 + this.speedReduce) * this.startSpeed;
             this.x += speedTmp;
             this.y += speedTmp;
             this.height -= speedTmp * 2;
@@ -250,11 +269,17 @@ class DefenceArea {
             this.burning = false;
         }
         else {
+<<<<<<< HEAD
             if (user.HP >= this.hurt)
                 user.HP -= this.hurt;
             else{
+=======
+            if (user.HP >= 0.05)
+                user.HP -= 0.05;
+            else {
+>>>>>>> c5ccf8f72eaca5ba417e875ac63840d84672e538
                 user.HP = 0;
-                if(!user.isdeath)
+                if (!user.isdeath)
                     user.death();
             }
             this.burning = true;
@@ -264,9 +289,9 @@ class DefenceArea {
 }
 
 var Getdistance = ((obj1, obj2) => {
-    return Math.sqrt((obj1.y - obj2.y) * (obj1.y - obj2.y) + 
-                    (obj1.x - obj2.x) * (obj1.x - obj2.x));
-})
+    return Math.sqrt((obj1.y - obj2.y) * (obj1.y - obj2.y) +
+        (obj1.x - obj2.x) * (obj1.x - obj2.x));
+});
 
 class Room {
     constructor() {
@@ -300,58 +325,58 @@ class Room {
 
         if (this.users.remove(user) === 0) {
             delete rooms[this.id];
-            this.penglist.remove(user)
+            this.penglist.remove(user);
         }
         return 'succeed';
     }
     // collision or not
-    Ispeng(obj1,obj2) {
-        if(Getdistance(obj1, obj2) < obj1.radius+obj2.radius){
+    Ispeng(obj1, obj2) {
+        if (Getdistance(obj1, obj2) < obj1.radius + obj2.radius) {
             return true;
         }
         return false;
     }
 
     Isuser(obj) {
-        if(obj.skills != undefined)
-            return true
+        if (obj.skills != undefined)
+            return true;
         return false;
     }
 
     Isskill(obj) {
-        if(obj.attackerid != undefined)
-            return true
+        if (obj.attackerid != undefined)
+            return true;
         return false;
     }
 
-    Peng(obj1, obj2){
+    Peng(obj1, obj2) {
         //both object are user
         if (this.Isuser(obj1) && this.Isuser(obj2)) {
-            let dis = Getdistance(obj1, obj2)
+            let dis = Getdistance(obj1, obj2);
             //debug
-            // console.log(obj1.x) 
-            let retdistance = (obj1.radius + obj2.radius - dis) / 2
-            let x = (obj1.x - obj2.x) / dis * retdistance
-            let y = (obj1.y - obj2.y) / dis * retdistance
-            obj2.x += (obj2.x - obj1.x) / dis * retdistance
-            obj2.y += (obj2.y - obj1.y) / dis * retdistance
-            obj1.x += x
-            obj1.y += y
+            // console.log(obj1.x)
+            let retdistance = (obj1.radius + obj2.radius - dis) / 2;
+            let x = (obj1.x - obj2.x) / dis * retdistance;
+            let y = (obj1.y - obj2.y) / dis * retdistance;
+            obj2.x += (obj2.x - obj1.x) / dis * retdistance;
+            obj2.y += (obj2.y - obj1.y) / dis * retdistance;
+            obj1.x += x;
+            obj1.y += y;
         }
-        else if(this.Isuser(obj1) && this.Isskill(obj2)) {
-            if(obj2.attackerid !== obj1.id)
-                obj2.Hit(obj1)
+        else if (this.Isuser(obj1) && this.Isskill(obj2)) {
+            if (obj2.attackerid !== obj1.id)
+                obj2.Hit(obj1);
         }
-     }
+    }
 
     // 可能的返回值: succeed, unscceed,unsucceedl
     Updates() {
         this.users.forEach(user => {
-            if(user.isdeath && user.showdeath) {
-                return "died"
+            if (user.isdeath && user.showdeath) {
+                return 'died';
             }
-            if(user.isdeath && !user.showdeath) {
-                user.showdeath = true
+            if (user.isdeath && !user.showdeath) {
+                user.showdeath = true;
             }
             // user.target = { x: user.x + 1000, y: user.y + 1000 }; //for test
             if (user.moveToTarget() !== 'succeed') {
@@ -362,19 +387,19 @@ class Room {
             // console.log("x,y"+user.screenX,user.screenY)
         });
         this.skillslist.forEach(skill => {
-            if (skill.Updates() !== 'succeed'){
+            if (skill.Updates() !== 'succeed') {
                 return 'unsucceed';
             }
-        })
+        });
         //list
         this.penglist.forEach(obj1 => {
             this.penglist.forEach(obj2 => {
-                if(obj1 !== obj2) {
-                    if(this.Ispeng(obj1, obj2))
+                if (obj1 !== obj2) {
+                    if (this.Ispeng(obj1, obj2))
                         this.Peng(obj1, obj2);
                 }
-            })
-        })
+            });
+        });
 
         if (this.defenceArea.AreaReduce() !== 'succeed')
             return 'unsucceed1';
@@ -447,37 +472,85 @@ class Skills{
             if(!this.isblink){
                 rooms[user.roomId].penglist.push(this)
                 this.isdisappear = false
+
+class Skills {
+    constructor(skill, userid) {
+        this.name = skill.name;
+        this.damage = skill.damage;
+        this.speed = skill.speed;
+        this.range = skill.range;
+        this.colddown = skill.colddown;
+        this.radius = skill.radius;
+        this.posinfluence = skill.posinfluence;
+        this.isblink = skill.isblink; //
+        this.attackerid = userid;
+        this.x = -10000;
+        this.y = -10000;
+        this.eps = 0.0000001;
+        this.start = { x: null, y: null };
+        this.color = skill.color;
+
+        this.curcold = 0;//cur cold time
+        this.iscoldover = true; //can use or not
+        this.screenX = null;
+        this.screenY = null;
+        this.screenstartX = null;
+        this.screenstartY = null;
+        this.target = { x: -10000, y: -10000 };
+        this.distance = 0;
+        this.isdisappear = true;
+        rooms[users[userid].roomId].skillslist.push(this);
+    }
+    Attack(user) {
+        if (this.iscoldover) {
+            this.x = user.x;
+            this.y = user.y;
+            this.startx = user.x;
+            this.starty = user.y;
+            let dis = Getdistance(this, { x: user.skilltarget.x, y: user.skilltarget.y });
+            if (this.isblink) {
+                let realdis = Math.min(dis, this.range);
+                user.x = user.x + (user.skilltarget.x - user.x) / dis * realdis;
+                user.y = user.y + (user.skilltarget.y - user.y) / dis * realdis;
+                user.target.x = user.x;
+                user.target.y = user.y;
             }
-            this.iscoldover = false
-            this.curcold = this.colddown
+            else {
+                this.target.x = this.x + (user.skilltarget.x - this.x) / dis * this.range;
+                this.target.y = this.y + (user.skilltarget.y - this.y) / dis * this.range;
+                this.isdisappear = false;
+                rooms[user.roomId].penglist.push(this);
+            }
+            this.iscoldover = false;
+            this.curcold = this.colddown;
         }
         else
-            return "skill is in cold"
+            return 'skill is in cold';
     }
     Hit(user) {
-        console.log("Hit");
-        if(user.HP > this.damage){
-            user.HP -= this.damage
-            users[this.attackerid].score += this.damage
+        console.log('Hit');
+        if (user.HP > this.damage) {
+            user.HP -= this.damage;
+            users[this.attackerid].score += this.damage;
         }
-        else{
-            users[this.attackerid].score += Math.ceil(user.HP)
+        else {
+            users[this.attackerid].score += Math.ceil(user.HP);
             // console.log(user.HP)
-            user.HP = 0
-            if(!user.isdeath)
-                user.death()
+            user.HP = 0;
+            if (!user.isdeath)
+                user.death();
         }
-        let dis = Getdistance(this,user)
-        let ydis = user.y - this.y
-        let xdis = user.x - this.x
-        if(xdis<0)
-            user.hitspeedx -= Math.sqrt(-xdis/dis*this.posinfluence*2)
+        let dis = Getdistance(this, user);
+        let ydis = user.y - this.y;
+        let xdis = user.x - this.x;
+        if (xdis < 0)
+            user.hitspeedx -= Math.sqrt(-xdis / dis * this.posinfluence * 2);
         else
-            user.hitspeedx += Math.sqrt(xdis/dis*this.posinfluence*2)
-        if(ydis<0)
-            user.hitspeedy -= Math.sqrt(-ydis/dis*this.posinfluence*2)
+            user.hitspeedx += Math.sqrt(xdis / dis * this.posinfluence * 2);
+        if (ydis < 0)
+            user.hitspeedy -= Math.sqrt(-ydis / dis * this.posinfluence * 2);
         else
-            user.hitspeedy += Math.sqrt(ydis/dis*this.posinfluence*2)
+            user.hitspeedy += Math.sqrt(ydis / dis * this.posinfluence * 2);
         // console.log(user.hitspeedx,user.hitspeedy)
         //chongzhuang until the target
         // if(!this.ischongzhuang)
@@ -496,21 +569,39 @@ class Skills{
         this.screenX = null
         this.screenY = null
         this.isdisappear = true
+        rooms[users[this.attackerid].roomId].penglist.remove(this);
+    }
+    Disappear() {
+        // console.log("disapear");
+        this.x = -10000;
+        this.y = -10000;
+        this.target.x = -10000;
+        this.target.y = -10000;
+        this.screenX = null;
+        this.screenY = null;
+        this.isdisappear = true;
         // console.log(this.x,this.y)
-        rooms[users[this.attackerid].roomId].penglist.remove(this)
+        rooms[users[this.attackerid].roomId].penglist.remove(this);
     }
     Updates() {
-        if(this.curcold <= 1000 / s.framePerSecond){
-            this.curcold = 0
-            this.iscoldover = true
+        if (this.curcold <= 1000 / s.framePerSecond) {
+            this.curcold = 0;
+            this.iscoldover = true;
         }
         else
-            this.curcold -= 1000/s.framePerSecond
+            this.curcold -= 1000 / s.framePerSecond;
         //blink complete at once no need to call moveToTarget()
+
         if(this.blink)
             return "blink"
         if(this.target.x != this.x && this.target.y != this.y)
             this.moveToTarget()
+
+        if (this.isblink)
+            return 'blink';
+        if (this.target.x != this.x && this.target.y != this.y)
+            this.moveToTarget();
+
     }
     moveToTarget() {
         let dis = Math.sqrt((this.target.x - this.x) * (this.target.x - this.x) +
@@ -525,11 +616,11 @@ class Skills{
             this.y += dir.y * this.speed;
         }
         // console.log(this.x,this.target.x,this.y,this.target.y,this.isdisappear)
-        if(Math.abs(this.x - this.target.x) <= this.eps && 
-            Math.abs(this.y - this.target.y) <= this.eps && 
+        if (Math.abs(this.x - this.target.x) <= this.eps &&
+            Math.abs(this.y - this.target.y) <= this.eps &&
             this.isdisappear == false)
-            this.Disappear()
-        return 'succeed'
+            this.Disappear();
+        return 'succeed';
     }
 }
 
@@ -586,8 +677,8 @@ io.on('connection', (socket) => {
         } else {
             result.me = null;
         }
-        
-        me.addskill()
+
+        me.addskill();
         logger.info('%s join %s %s', me.id, me.roomId, result.status);
         socket.emit('res_join', result);
     });
@@ -640,14 +731,14 @@ io.on('connection', (socket) => {
             return "casting"
         users[me.id].skilltarget.x = args.target.x;
         users[me.id].skilltarget.y = args.target.y;
-        users[me.id].skills[args.skillindex].Attack(users[me.id])
-    })
+        users[me.id].skills[args.skillindex].Attack(users[me.id]);
+    });
 
 });
 
 setInterval(() => {
     // console.log(users)
-    Object.keys(rooms).map(e=>rooms[e]).forEach((room) => {
+    Object.keys(rooms).map(e => rooms[e]).forEach((room) => {
         if (room.status === 'running') {
             // 每间room进行状态更新
             room.Updates();
