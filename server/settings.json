@@ -6,22 +6,10 @@
     "startCountdown": 5,
     "gameWidth": 5000,
     "gameHeight": 5000,
-<<<<<<< HEAD
     "defenceAreaWidth": 3000,
     "defenceAreaHeight": 3000,
     "startSpeed": 3,
     "colors": ["red", "green", "cyan", "yellow"],
-=======
-    "defenceAreaWidth": 2500,
-    "defenceAreaHeight": 2500,
-    "startSpeed": 6,
-    "colors": [
-        "red",
-        "green",
-        "cyan",
-        "yellow"
-    ],
->>>>>>> c5ccf8f72eaca5ba417e875ac63840d84672e538
     "radius": 40,
     "startHP": 100,
     "minheight": 10,

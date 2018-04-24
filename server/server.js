@@ -34,13 +34,9 @@ class User {
 
         this.ismove = false;// user move or not
         this.target = { x: this.x, y: this.y };
-<<<<<<< HEAD
         this.skilltarget = {x: null, y: null};
         this.iscasting = false;
         this.castingtime = 0;
-=======
-        this.skilltarget = { x: null, y: null };
->>>>>>> c5ccf8f72eaca5ba417e875ac63840d84672e538
         this.speed = s.startSpeed;
         this.HP = s.startHP;
         this.isdeath = false;//user death or not
@@ -66,17 +62,10 @@ class User {
         // socket.emit("s_death",this)
     }
 
-<<<<<<< HEAD
     addskill(){
         this.skills[0] = new Skills({name : "huoqiu", damage : 10, speed : 20 * s.scalingratio, range: 2000*s.scalingratio, colddown: 1000, radius: 20 * s.scalingratio, posinfluence: 150, ischongzhuang: false, color: 'red'},this.id)
         this.skills[1] = new Skills({name : "blink", damage : 5, speed : 60*s.scalingratio, range: 1000*s.scalingratio, colddown: 3000, radius: this.radius, posinfluence: 100, ischongzhuang: true, color: null},this.id)
         this.skills[2] = new Skills({name : "thunder", damage : 5, speed : 60 * s.scalingratio, range: 1000*s.scalingratio, colddown: 1000, radius: 20 * s.scalingratio, posinfluence: 70, ischongzhuang: false, color: 'blue'},this.id)
-=======
-    addskill() {
-        this.skills[0] = new Skills({ name: 'huoqiu', damage: 10, speed: 40 * s.scalingratio, range: 2000 * s.scalingratio, colddown: 1000, radius: 20 * s.scalingratio, posinfluence: 300, isblink: false, color: 'red' }, this.id);
-        this.skills[1] = new Skills({ name: 'blink', damage: 0, speed: 0 * s.scalingratio, range: 1000 * s.scalingratio, colddown: 3000, radius: 0, posinfluence: 0, isblink: true, color: null }, this.id);
-        this.skills[2] = new Skills({ name: 'thunder', damage: 5, speed: 120 * s.scalingratio, range: 1000 * s.scalingratio, colddown: 1000, radius: 20 * s.scalingratio, posinfluence: 100, isblink: false, color: 'blue' }, this.id);
->>>>>>> c5ccf8f72eaca5ba417e875ac63840d84672e538
     }
 
     emitFatal(reason) {
@@ -149,7 +138,6 @@ class User {
     leave() {
         // 先操作room再操作user
         if (this.roomId !== null) {
-<<<<<<< HEAD
             if(rooms[this.roomId].status != 'running'){
                 rooms[this.roomId].remove(this);
                 rooms[this.roomId].users.remove(this)
@@ -159,13 +147,6 @@ class User {
             }
             this.showdeath = true
             this.death()
-=======
-            if (rooms[this.roomId].status != 'running')
-                rooms[this.roomId].remove(this);
-            this.isdeath = true;
-            this.showdeath = true;
-            this.HP = 0;
->>>>>>> c5ccf8f72eaca5ba417e875ac63840d84672e538
         }
         if (this.roomId in sockets[this.id].rooms) {
             sockets[this.id].leave(this.roomId, (err) => {
@@ -269,15 +250,9 @@ class DefenceArea {
             this.burning = false;
         }
         else {
-<<<<<<< HEAD
             if (user.HP >= this.hurt)
                 user.HP -= this.hurt;
             else{
-=======
-            if (user.HP >= 0.05)
-                user.HP -= 0.05;
-            else {
->>>>>>> c5ccf8f72eaca5ba417e875ac63840d84672e538
                 user.HP = 0;
                 if (!user.isdeath)
                     user.death();
@@ -472,54 +447,6 @@ class Skills{
             if(!this.isblink){
                 rooms[user.roomId].penglist.push(this)
                 this.isdisappear = false
-
-class Skills {
-    constructor(skill, userid) {
-        this.name = skill.name;
-        this.damage = skill.damage;
-        this.speed = skill.speed;
-        this.range = skill.range;
-        this.colddown = skill.colddown;
-        this.radius = skill.radius;
-        this.posinfluence = skill.posinfluence;
-        this.isblink = skill.isblink; //
-        this.attackerid = userid;
-        this.x = -10000;
-        this.y = -10000;
-        this.eps = 0.0000001;
-        this.start = { x: null, y: null };
-        this.color = skill.color;
-
-        this.curcold = 0;//cur cold time
-        this.iscoldover = true; //can use or not
-        this.screenX = null;
-        this.screenY = null;
-        this.screenstartX = null;
-        this.screenstartY = null;
-        this.target = { x: -10000, y: -10000 };
-        this.distance = 0;
-        this.isdisappear = true;
-        rooms[users[userid].roomId].skillslist.push(this);
-    }
-    Attack(user) {
-        if (this.iscoldover) {
-            this.x = user.x;
-            this.y = user.y;
-            this.startx = user.x;
-            this.starty = user.y;
-            let dis = Getdistance(this, { x: user.skilltarget.x, y: user.skilltarget.y });
-            if (this.isblink) {
-                let realdis = Math.min(dis, this.range);
-                user.x = user.x + (user.skilltarget.x - user.x) / dis * realdis;
-                user.y = user.y + (user.skilltarget.y - user.y) / dis * realdis;
-                user.target.x = user.x;
-                user.target.y = user.y;
-            }
-            else {
-                this.target.x = this.x + (user.skilltarget.x - this.x) / dis * this.range;
-                this.target.y = this.y + (user.skilltarget.y - this.y) / dis * this.range;
-                this.isdisappear = false;
-                rooms[user.roomId].penglist.push(this);
             }
             this.iscoldover = false;
             this.curcold = this.colddown;
@@ -569,17 +496,6 @@ class Skills {
         this.screenX = null
         this.screenY = null
         this.isdisappear = true
-        rooms[users[this.attackerid].roomId].penglist.remove(this);
-    }
-    Disappear() {
-        // console.log("disapear");
-        this.x = -10000;
-        this.y = -10000;
-        this.target.x = -10000;
-        this.target.y = -10000;
-        this.screenX = null;
-        this.screenY = null;
-        this.isdisappear = true;
         // console.log(this.x,this.y)
         rooms[users[this.attackerid].roomId].penglist.remove(this);
     }
@@ -591,17 +507,10 @@ class Skills {
         else
             this.curcold -= 1000 / s.framePerSecond;
         //blink complete at once no need to call moveToTarget()
-
         if(this.blink)
             return "blink"
         if(this.target.x != this.x && this.target.y != this.y)
             this.moveToTarget()
-
-        if (this.isblink)
-            return 'blink';
-        if (this.target.x != this.x && this.target.y != this.y)
-            this.moveToTarget();
-
     }
     moveToTarget() {
         let dis = Math.sqrt((this.target.x - this.x) * (this.target.x - this.x) +
