@@ -5,6 +5,9 @@
         "node": true
     },
     "extends": "eslint:recommended",
+    "parserOptions": {
+        "sourceType": "module"
+    },
     "rules": {
         "indent": [
             "error",
@@ -21,6 +24,7 @@
         ],
         "no-console": "off",
         "no-unused-vars": "warn",
-        "no-constant-condition": "off"
+        "no-constant-condition": "off",
+        "no-undef": "off"
     }
 }

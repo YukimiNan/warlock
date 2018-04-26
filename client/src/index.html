@@ -5,21 +5,18 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="screen-orientation" content="portrait">
 
   <title>Warlock</title>
 
-  <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-    crossorigin="anonymous">
-  <!-- <link rel="stylesheet" href="./css/bootstrap.min.css"> -->
-  <link rel="stylesheet" href="./css/main.css">
+  <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/index.css" rel="stylesheet">
 </head>
 
 <body>
 
   <div class="container">
     <div class="row" id="view-login">
-      <div class="col-md-offset-4 col-md-4 col-xs-12 ver-center-btm">
+      <div class="col-md-offset-4 col-md-4 ver-center-btm">
 
         <div class="panel panel-default">
           <div class="panel-body">
@@ -90,18 +87,14 @@
     </div>
   </div>
   <div class="row" id="view-canvas" hidden>
-    <canvas tabindex="1" id="cvs"></canvas>
+    <canvas id="cvs"></canvas>
   </div>
 
-  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-  <!-- <script src="./js/jquery.min.js"></script> -->
-  <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-    crossorigin="anonymous"></script>
-  <!-- <script src="./js/bootstrap.min.js"></script> -->
-  <script src="./socket.io/socket.io.js"></script>
-  <script src="./js/require.js"></script>
-  <script src="./js/easeljs.min.js"></script>
-  <script src="./js/app.js"></script>
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdn.bootcss.com/EaselJS/1.0.2/easeljs.min.js"></script>
+  <script src="socket.io/socket.io.js"></script>
+  <script src="js/app.bundle.js"></script>
 
 </body>
 

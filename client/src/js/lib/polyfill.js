@@ -1,8 +1,3 @@
-// activate vscode code completion, remove eslint error
-if (false) {
-    var define;
-}
-
 // https://gist.github.com/paulirish/1579671
 // requestAnimationFrame polyfill
 function rAF() {
@@ -30,6 +25,6 @@ function rAF() {
         };
 }
 
-define(() => () => {
+module.exports = () => {
     rAF();
-});
+};

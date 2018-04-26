@@ -1,28 +1,6 @@
-// activate vscode code completion, remove eslint error
-if (false) {
-    var $ = require('jquery');
-    var io = require('socket.io')();
-    var createjs = require('easeljs');
-}
+var room = require('./room');
 
 const global = {
-    // Keys and other mathematical constants
-    KEY_ESC: 27,
-    KEY_ENTER: 13,
-    KEY_CHAT: 13,
-    KEY_FIREFOOD: 119,
-    KEY_SPLIT: 32,
-    KEY_LEFT: 37,
-    KEY_UP: 38,
-    KEY_RIGHT: 39,
-    KEY_DOWN: 40,
-    borderDraw: false,
-    spin: -Math.PI,
-    enemySpin: -Math.PI,
-    mobile: false,
-    foodSides: 10,
-    virusSides: 20,
-
     // Canvas
     screenWidth: window.innerWidth,
     screenHeight: window.innerHeight,
@@ -30,14 +8,6 @@ const global = {
     gameHeight: 0,
     scalingratio: 1,
     gameStart: false,
-    disconnected: false,
-    died: false,
-    kicked: false,
-    continuity: false,
-    startPingTime: 0,
-    toggleMassState: 0,
-    backgroundColor: '#f2fbff',
-    lineColor: '#000000',
 };
 
 // 开全局便于debug
@@ -80,7 +50,7 @@ let defenceArea = { x: 0, y: 0, height: 0, width: 0 };
 let gameAreaShape = null;
 let defenceAreaShape = null;
 
-let Boards = null;
+let Board = null;
 let userBoard = null;
 let userHPs = [];
 let usernames_hp = [];
@@ -127,7 +97,7 @@ const resize = () => {
 
 window.addEventListener('resize', resize);
 
-const main = (room) => {
+$(() => {
     $('#login-form').submit(() => {
         $('#login-failed').text('');
         $('#login-submit').attr('disabled', true);
@@ -163,13 +133,13 @@ const main = (room) => {
         lines[1].graphics.c();
         for (; x < global.screenWidth; x += global.screenWidth / 10) {
             lines[0].graphics.setStrokeStyle(3)
-                .beginStroke('#33333333')
+                .beginStroke('rgba(51, 51, 51, 0.2)')
                 .moveTo(x, 0)
                 .lineTo(x, global.gameHeight);
         }
         for (; y < global.screenWidth; y += global.screenWidth / 10) {
             lines[1].graphics.setStrokeStyle(3)
-                .beginStroke('#33333333')
+                .beginStroke('rgba(51, 51, 51, 0.2)')
                 .moveTo(0, y)
                 .lineTo(global.screenWidth, y);
         }
@@ -193,8 +163,8 @@ const main = (room) => {
 
             gameAreaShape.graphics.c();
             gameAreaShape.graphics.setStrokeStyle(5, 1)
-                .beginStroke('#8B3A3ADD')
-                .beginFill('#B2222299')
+                .beginStroke('rgba(139, 58, 58, 0.9)')
+                .beginFill('rgba(178, 34, 34, 0.6)')
                 .drawRect(toScreenPos({ x: 0, y: 0 }).x, toScreenPos({ x: 0, y: 0 }).y, global.gameWidth * global.scalingratio, global.gameHeight * global.scalingratio);
 
             drawGrid();
@@ -207,7 +177,7 @@ const main = (room) => {
                 .lineTo(cameraMain.screenX, cameraMain.screenY);
             targetStar.graphics.c();
             targetStar.graphics.setStrokeStyle(3, 1)
-                .beginStroke('22AA22')
+                .beginStroke('#22AA22')
                 .beginFill('#00EE22')
                 .drawPolyStar(toScreenPos(target).x, toScreenPos(target).y, 12, 3, 0.7, 90);
 
@@ -215,18 +185,18 @@ const main = (room) => {
             //??????????????????????????????
             userBoard.graphics.setStrokeStyle(3, 1)
                 .beginStroke('22AA22')
-                .beginFill('#BBFFFF33')
+                .beginFill('rgba(187, 255, 255, 0.2)')
                 .drawRect(0, 0, 200 * global.screenWidth / startWidth, 200 * global.screenWidth / startWidth);
 
             scoreBoard.graphics.c();
             //??????????????????????????????
             scoreBoard.graphics.setStrokeStyle(3, 1)
                 .beginStroke('22AA22')
-                .beginFill('#BBFFFF33')
+                .beginFill('rgba(187, 255, 255, 0.2)')
                 .drawRect(200 * global.screenWidth / startWidth, 0, 200 * global.screenWidth / startWidth, 200 * global.screenWidth / startWidth);
 
             zi_shengyuwanjiashu.text = '剩余玩家数 : ' + aliveusernum;
-            zi_shengyuwanjiashu.font = 'bold '+ Math.ceil(25 * global.screenWidth / startWidth)+ 'px Arial';
+            zi_shengyuwanjiashu.font = 'bold ' + Math.ceil(25 * global.screenWidth / startWidth) + 'px Arial';
             zi_shengyuwanjiashu.textAlign = 'centor';
             zi_shengyuwanjiashu.x = innerWidth * (5 / 11);
             zi_shengyuwanjiashu.y = 30;
@@ -234,21 +204,21 @@ const main = (room) => {
 
 
             zi_wanjiabang.text = '玩家榜';
-            zi_wanjiabang.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+            zi_wanjiabang.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
             zi_wanjiabang.textAlign = 'centor';
             zi_wanjiabang.x = 80 * global.screenWidth / startWidth;
             zi_wanjiabang.y = 20 * global.screenWidth / startWidth;
             zi_wanjiabang.textBaseline = 'middle';
 
             zi_wanjiaming_hp.text = '用户名';
-            zi_wanjiaming_hp.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+            zi_wanjiaming_hp.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
             zi_wanjiaming_hp.textAlign = 'centor';
             zi_wanjiaming_hp.x = 20 * global.screenWidth / startWidth;
             zi_wanjiaming_hp.y = 40 * global.screenWidth / startWidth;
             zi_wanjiaming_hp.textBaseline = 'middle';
 
             zi_shengming.text = '生命';
-            zi_shengming.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+            zi_shengming.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
             zi_shengming.textAlign = 'centor';
             zi_shengming.x = 150 * global.screenWidth / startWidth;
             zi_shengming.y = 40 * global.screenWidth / startWidth;
@@ -256,42 +226,42 @@ const main = (room) => {
 
 
             zi_jifenbang.text = '积分榜';
-            zi_jifenbang.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+            zi_jifenbang.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
             zi_jifenbang.textAlign = 'centor';
             zi_jifenbang.x = 280 * global.screenWidth / startWidth;
             zi_jifenbang.y = 20 * global.screenWidth / startWidth;
             zi_jifenbang.textBaseline = 'middle';
 
             zi_wanjiaming_score.text = '用户名';
-            zi_wanjiaming_score.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+            zi_wanjiaming_score.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
             zi_wanjiaming_score.textAlign = 'centor';
             zi_wanjiaming_score.x = 220 * global.screenWidth / startWidth;
             zi_wanjiaming_score.y = 40 * global.screenWidth / startWidth;
             zi_wanjiaming_score.textBaseline = 'middle';
 
             zi_jifeng.text = '积分';
-            zi_jifeng.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+            zi_jifeng.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
             zi_jifeng.textAlign = 'centor';
             zi_jifeng.x = 340 * global.screenWidth / startWidth;
             zi_jifeng.y = 40 * global.screenWidth / startWidth;
             zi_jifeng.textBaseline = 'middle';
 
             zi_huoqiu.text = 'Q:火球';
-            zi_huoqiu.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+            zi_huoqiu.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
             zi_huoqiu.textAlign = 'centor';
             zi_huoqiu.x = 80 * global.screenWidth / startWidth;
             zi_huoqiu.y = 500 * global.screenWidth / startWidth;
             zi_huoqiu.textBaseline = 'middle';
 
             zi_chongzhuang.text = 'W:冲撞';
-            zi_chongzhuang.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+            zi_chongzhuang.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
             zi_chongzhuang.textAlign = 'centor';
             zi_chongzhuang.x = 180 * global.screenWidth / startWidth;
             zi_chongzhuang.y = 500 * global.screenWidth / startWidth;
             zi_chongzhuang.textBaseline = 'middle';
 
             zi_leidian.text = 'E:雷电';
-            zi_leidian.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+            zi_leidian.font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
             zi_leidian.textAlign = 'centor';
             zi_leidian.x = 280 * global.screenWidth / startWidth;
             zi_leidian.y = 500 * global.screenWidth / startWidth;
@@ -299,14 +269,14 @@ const main = (room) => {
 
             users.forEach((user, index) => {
                 usernames_hp[index].text = user.nickname;
-                usernames_hp[index].font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+                usernames_hp[index].font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
                 usernames_hp[index].textAlign = 'centor';
                 usernames_hp[index].x = 20 * global.screenWidth / startWidth;
                 usernames_hp[index].y = (60 + index * 20) * global.screenWidth / startWidth;
                 usernames_hp[index].textBaseline = 'middle';
 
                 usernames_score[index].text = user.nickname;
-                usernames_score[index].font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+                usernames_score[index].font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
                 usernames_score[index].textAlign = 'centor';
                 usernames_score[index].x = 220 * global.screenWidth / startWidth;
                 usernames_score[index].y = (60 + index * 20) * global.screenWidth / startWidth;
@@ -314,34 +284,34 @@ const main = (room) => {
 
 
                 userHPs[index].text = Math.ceil(user.HP);
-                userHPs[index].font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+                userHPs[index].font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
                 userHPs[index].textAlign = 'centor';
                 userHPs[index].x = 150 * global.screenWidth / startWidth;
                 userHPs[index].y = (60 + index * 20) * global.screenWidth / startWidth;
                 userHPs[index].textBaseline = 'middle';
 
                 userscores[index].text = user.score;
-                userscores[index].font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+                userscores[index].font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
                 userscores[index].textAlign = 'centor';
                 userscores[index].x = 340 * global.screenWidth / startWidth;
                 userscores[index].y = (60 + index * 20) * global.screenWidth / startWidth;
                 userscores[index].textBaseline = 'middle';
-                
-                if(me == user) {
-                    user.skills.forEach((skill,index) => {
-                        zi_lengque[index].text = Math.ceil(skill.curcold);
-                        zi_lengque[index].font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth)+ 'px Arial';
+
+                if (me == user) {
+                    user.skills.forEach((skill, index) => {
+                        zi_lengque[index].text = (Math.ceil(skill.curcold) / 1000).toFixed(1);//;
+                        zi_lengque[index].font = 'bold ' + Math.ceil(15 * global.screenWidth / startWidth) + 'px Arial';
                         zi_lengque[index].textAlign = 'centor';
-                        zi_lengque[index].x = (100 + 100 * index - 20) * global.screenWidth / startWidth ;
+                        zi_lengque[index].x = (100 + 100 * index - 20) * global.screenWidth / startWidth;
                         zi_lengque[index].y = 550 * global.screenWidth / startWidth;
                         zi_lengque[index].textBaseline = 'middle';
-    
+
                         skillbutton[index].graphics.c();
                         skillbutton[index].graphics.setStrokeStyle(4, 1)
                             .beginStroke('black')
                             .beginFill(skill.color)
                             .drawCircle((100 + 100 * index) * global.screenWidth / startWidth, 550 * global.screenWidth / startWidth, 30 * global.screenWidth / startWidth);
-                    })
+                    });
                 }
 
                 if (user.isdeath) {
@@ -392,8 +362,8 @@ const main = (room) => {
                         skillCircle[index].graphics.c();
                         skillCircle[index].graphics.setStrokeStyle(10, 1)
                             .beginStroke('blue')
-                            .moveTo(skill.screenstartX+Math.random()*20, skill.screenstartY+Math.random()*20)
-                            .lineTo(skill.screenX+Math.random()*20, skill.screenY+Math.random()*20);
+                            .moveTo(skill.screenstartX + Math.random() * 20, skill.screenstartY + Math.random() * 20)
+                            .lineTo(skill.screenX + Math.random() * 20, skill.screenY + Math.random() * 20);
                     }
                     else {
                         skillCircle[index].graphics.c();
@@ -408,14 +378,14 @@ const main = (room) => {
 
             defenceAreaShape.graphics.c();
             defenceAreaShape.graphics.setStrokeStyle(5, 1)
-                .beginStroke('#00C5CDAA')
-                // .beginFill('#BBFFFF33')
+                .beginStroke('rgba(0, 197, 205, 0.7)')
+                // .beginFill('rgba(187, 255, 255, 0.2)')
                 .beginFill('white')
                 .drawRect(toScreenPos(defenceArea).x, toScreenPos(defenceArea).y, defenceArea.width, defenceArea.height);
 
 
             touchBoard.graphics.c();
-            touchBoard.graphics.beginFill('#11111111')
+            touchBoard.graphics.beginFill('rgba(17, 17, 17, 0.1)')
                 .drawRect(0, 0, global.gameWidth, global.gameHeight);
 
             stage.update();
@@ -510,7 +480,7 @@ const main = (room) => {
         $('#view-room').slideUp('normal');
         global.gameWidth = args.gameWidth;
         global.gameHeight = args.gameHeight;
-        global.scalingratio = args.scalingratio
+        global.scalingratio = args.scalingratio;
         $('#view-canvas').slideDown('normal');
         stage = new createjs.Stage('cvs');
 
@@ -538,7 +508,7 @@ const main = (room) => {
             if (!me.isdeath && mouseMode != -1) {
                 beforeskill.graphics.c();
                 beforeskill.graphics.setStrokeStyle(3, 1)
-                    // .beginStroke('#00C5CDAA')
+                    // .beginStroke('rgba(0, 197, 205, 0.7)')
                     .beginFill('blue')
                     .drawCircle(event.stageX, event.stageY, 10);
             }
@@ -628,16 +598,4 @@ const main = (room) => {
         });
         room.update(users, me);
     });
-};
-
-require.config({
-    baseUrl: 'js/lib'
-})(['domReady', 'polyfill', 'room'],
-    (domReady, polyfill, room) => {
-        domReady(() => {
-            polyfill();
-            main(room);
-        });
-    });
-
-
+});

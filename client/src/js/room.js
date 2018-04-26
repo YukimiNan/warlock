@@ -1,9 +1,3 @@
-// activate vscode code completion, remove eslint error
-if (false) {
-    var $ = require('jquery');
-    var define;
-}
-
 const liHTML = '<li class="list-group-item"><h4></h4></li>';
 const youHTML = '<span class="label label-default" id="room-you">你</span>';
 
@@ -48,9 +42,7 @@ const chat = (user, message) => {
     $('#room-msgdiv').scrollTop($('#room-msgdiv')[0].scrollHeight);
 };
 
-define(() => {
-    return {
-        update: update,
-        chat: chat,
-    };
-});
+module.exports = {
+    update: update,
+    chat: chat
+};
